@@ -1,4 +1,4 @@
-# Comprehensible Sudoku Solver
+# Berlin Public Transport Reachability Map
 
 Draw a map indicating reachability via public transport for specific destinations
 
@@ -51,3 +51,5 @@ python main.py
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+
+Copyright (2022) Johannes Heller
