@@ -16,9 +16,6 @@ class Destination:
     def __repr__(self):
         return f'Destination(name={self.name})'
 
-    def get_popup_text(self) -> str:
-        """Return a string with the station name and durations to destinations in pseudo-html"""
-
 
 class Station:
     """Bus/Tram/Subway/Regional Station with coordinates and durations to destinations"""
