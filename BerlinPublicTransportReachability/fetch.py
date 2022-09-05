@@ -1,9 +1,11 @@
 import logging
+from pathlib import Path
 from typing import Literal
 import pickle  # noqa
+import json
 
 from BerlinPublicTransportReachability.transport_api import BerlinTransportApi
-from BerlinPublicTransportReachability.entities import Station, Destination
+from BerlinPublicTransportReachability.entities import Station, Destination, Ortsteil
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +15,7 @@ def fetch_api_data(destinations: list[str],
                    max_transfers: int,
                    time: Literal['next_sunday_early_morning', 'next_workday_noon']
                    ) -> tuple[list[dict], dict[str, list[dict]]]:
+    """fetch the data from the transport api and return the raw data"""
     bvg = BerlinTransportApi(max_duration=max_duration, time=time, max_transfers=max_transfers)
     destinations = [bvg.get_destination(d) for d in destinations]
     reachable_by_destinations = {}
@@ -20,16 +23,17 @@ def fetch_api_data(destinations: list[str],
         reachable = bvg.get_reachable_stops_from(destination)
         reachable_by_destinations[destination['name']] = reachable
 
-    # with open("reachable_by_destinations.pkl", "wb") as f:
-    #     pickle.dump(reachable_by_destinations, f)
-    # with open("destinations.pkl", "wb") as f:
-    #     pickle.dump(destinations, f)
+    with open("reachable_by_destinations.pkl", "wb") as f:
+        pickle.dump(reachable_by_destinations, f)
+    with open("destinations.pkl", "wb") as f:
+        pickle.dump(destinations, f)
 
     return destinations, reachable_by_destinations
 
 
 def unserialize_stations(reachable_by_destinations: dict[str, list[dict]],
                          max_duration: int) -> list[Station]:
+    """unserialize the stations from the raw data"""
     reachable_stations = []
     # for each destination (that has a list of durations)
     for destination, durations in reachable_by_destinations.items():
@@ -65,6 +69,7 @@ def unserialize_stations(reachable_by_destinations: dict[str, list[dict]],
 
 
 def unserialize_destinations(destinations_raw: list[dict]) -> list[Destination]:
+    """unserialize the destinations from the raw data"""
     destinations = []
     for destination_raw in destinations_raw:
         coordinates = destination_raw['location']['latitude'], destination_raw['location']['longitude']
@@ -73,3 +78,26 @@ def unserialize_destinations(destinations_raw: list[dict]) -> list[Destination]:
                                   products=destination_raw['products'])
         destinations.append(destination)
     return destinations
+
+
+def load_ortsteile(path: Path, stations: list[Station]) -> list[Ortsteil]:
+    """load the geojson file with the ortsteile and add the reachable stations to each ortsteil"""
+    with open(path, 'r', encoding='utf-8') as f:
+        features = json.load(f)["features"]
+    ortsteile = [Ortsteil(f) for f in features]
+
+    for station in stations:
+        found = False
+        for ortsteil in ortsteile:
+            if ortsteil.contains_station(station=station):
+                ortsteil.add_station(station)
+                found = True
+        if not found:
+            logger.warning(f'Station {station.name} not found in any Ortsteil')
+
+    # we need to calculate the average duration for each ortsteil as it must be stored at specific position
+    # for the folium/leaflet geojson tooltip
+    for ortsteil in ortsteile:
+        ortsteil.calculate_average_duration()
+
+    return ortsteile

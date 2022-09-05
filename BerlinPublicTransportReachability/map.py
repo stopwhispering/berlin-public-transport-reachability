@@ -1,7 +1,7 @@
 import folium
 import webbrowser
 
-from BerlinPublicTransportReachability.entities import Station, Destination
+from BerlinPublicTransportReachability.entities import Station, Destination, Ortsteil
 
 
 # Example Latitudes/Longitudes:
@@ -23,10 +23,16 @@ class ReachableMap:
         self.circle_radius = circle_radius  # in meters
         self.m = self._draw_base_map()
 
-    def draw(self):
-        """Draw the map"""
+    def draw_reachable_stations(self):
+        """Draw the map with the given destinations as markers and the given stations as circles"""
         self._draw_base_map()
         self._draw_reachable_stops()
+        self.m.save("index.html")
+        webbrowser.open("index.html")
+
+    def draw_ortsteile(self, ortsteile: list[Ortsteil]):
+        self._draw_base_map()
+        self._draw_ortsteile(ortsteile=ortsteile)
         self.m.save("index.html")
         webbrowser.open("index.html")
 
@@ -89,3 +95,17 @@ class ReachableMap:
             ).add_to(m)
 
         return m
+
+    def _draw_ortsteile(self, ortsteile: list[Ortsteil]):
+        """Draw the ortsteile as polygons from geojson file on the map"""
+        fields = ['OTEIL', 'BEZIRK', 'average_duration', 'min_duration', 'max_duration', 'count_stations']
+        aliases = ['Ortsteil', 'Bezirk', 'Weighted Average Duration',
+                   'Min. Duration', 'Max. Duration', 'Count Stations']
+        for ortsteil in ortsteile:
+            geojson = folium.GeoJson(ortsteil.feature,
+                                     style_function=ortsteil.get_style,
+                                     tooltip=folium.features.GeoJsonTooltip(fields=fields,
+                                                                            aliases=aliases,
+                                                                            ),
+                                     )
+            geojson.add_to(self.m)

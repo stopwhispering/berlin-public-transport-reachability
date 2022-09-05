@@ -1,4 +1,7 @@
-from BerlinPublicTransportReachability.fetch import fetch_api_data, unserialize_stations, unserialize_destinations
+from pathlib import Path
+
+from BerlinPublicTransportReachability.fetch import fetch_api_data, unserialize_stations, unserialize_destinations, \
+    load_ortsteile
 from BerlinPublicTransportReachability.map import ReachableMap
 import pickle  # noqa
 import logging
@@ -16,9 +19,13 @@ if __name__ == '__main__':
     # with open("reachable_by_destinations.pkl", "rb") as f:
     #     reachable_by_destinations = pickle.load(f)
     # with open("destinations.pkl", "rb") as f:
-    #     destinations = pickle.load(f)
+    #     destinations_raw = pickle.load(f)
 
     destinations = unserialize_destinations(destinations_raw=destinations_raw)
     stations = unserialize_stations(reachable_by_destinations=reachable_by_destinations,
                                     max_duration=MAX_DURATION)
-    ReachableMap(destinations=destinations, stations=stations, circle_radius=CIRCLE_RADIUS).draw()
+    ortsteile = load_ortsteile(path=Path('./static/lor_ortsteile.geojson'), stations=stations)
+
+    ReachableMap(destinations=destinations, stations=stations, circle_radius=CIRCLE_RADIUS).draw_reachable_stations()
+    ReachableMap(destinations=destinations, stations=stations, circle_radius=CIRCLE_RADIUS).draw_ortsteile(
+        ortsteile=ortsteile)

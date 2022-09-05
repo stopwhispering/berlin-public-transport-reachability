@@ -2,3 +2,4 @@ requests
 folium
 colour
 pytz
+shapely
