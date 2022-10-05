@@ -23,10 +23,10 @@ def fetch_api_data(destinations: list[str],
         reachable = bvg.get_reachable_stops_from(destination)
         reachable_by_destinations[destination['name']] = reachable
 
-    with open("reachable_by_destinations.pkl", "wb") as f:
-        pickle.dump(reachable_by_destinations, f)
-    with open("destinations.pkl", "wb") as f:
-        pickle.dump(destinations, f)
+    # with open("reachable_by_destinations.pkl", "wb") as f:
+    #     pickle.dump(reachable_by_destinations, f)
+    # with open("destinations.pkl", "wb") as f:
+    #     pickle.dump(destinations, f)
 
     return destinations, reachable_by_destinations
 
