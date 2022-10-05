@@ -27,6 +27,12 @@ The blue markers indicate your configured destinations. The green to red circles
 Click any of the circles for details.
 ![img.png](static/station_details.png)
 
+As an alternative, have districts evaluated:
+ ```bash
+ python3 main.py --action districts
+ ```
+![img.png](static/map_districts.png)
+
 ## Requirements
 
 - Python 3.10+
