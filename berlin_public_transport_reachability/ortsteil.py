@@ -1,13 +1,11 @@
 from math import ceil
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from shapely import Point
 from shapely.geometry import shape
 
 from berlin_public_transport_reachability.entities import GeoFeature, color_map
-
-if TYPE_CHECKING:
-    from berlin_public_transport_reachability.station import Station
+from berlin_public_transport_reachability.station import Station
 
 
 class Ortsteil:  # pylint: disable=too-many-instance-attributes

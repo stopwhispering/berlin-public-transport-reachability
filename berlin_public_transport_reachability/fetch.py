@@ -1,17 +1,13 @@
 import json
 import logging
-from typing import TYPE_CHECKING
+from pathlib import Path
 
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from berlin_public_transport_reachability.entities import (
-        Destination,
-        GeoFeature,
-        ReachableInMinutes,
-    )
-    from berlin_public_transport_reachability.enums import TimeValue
-
+from berlin_public_transport_reachability.entities import (
+    Destination,
+    GeoFeature,
+    ReachableInMinutes,
+)
+from berlin_public_transport_reachability.enums import TimeValue
 from berlin_public_transport_reachability.ortsteil import Ortsteil
 from berlin_public_transport_reachability.station import Station
 from berlin_public_transport_reachability.transport_api import BerlinTransportApi

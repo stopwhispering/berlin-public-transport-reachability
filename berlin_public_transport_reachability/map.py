@@ -1,13 +1,11 @@
 import webbrowser
-from typing import TYPE_CHECKING
 
 import folium
 from folium import Popup
 
-if TYPE_CHECKING:
-    from berlin_public_transport_reachability.entities import Destination
-    from berlin_public_transport_reachability.ortsteil import Ortsteil
-    from berlin_public_transport_reachability.station import Station
+from berlin_public_transport_reachability.entities import Destination
+from berlin_public_transport_reachability.ortsteil import Ortsteil
+from berlin_public_transport_reachability.station import Station
 
 # Example Latitudes/Longitudes:
 # Berlin
