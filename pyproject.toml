@@ -1,0 +1,145 @@
+[tool.poetry]
+name = "berlin-public-transport-reachability-map"
+version = "0.1.0"
+description = "Draw a map indicating reachability via public transport for specific destinations"
+authors = ["Johannes <stopwhispering314@gmail.com>"]
+readme = "README.md"
+packages = [{include = "berlin_public_transport_reachability_map"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.30.0"
+folium = "^0.14.0"
+colour = "^0.1.5"
+pytz = "^2023.3"
+shapely = "^2.0.1"
+pydantic = "^1.10.7"
+requests-cache = "^1.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.3.1"
+black = "^23.3.0"
+pylint = "^2.17.4"
+ruff = "^0.0.265"
+mypy = "^1.3.0"
+types-requests = "^2.30.0.0"
+types-pytz = "^2023.3.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.isort]
+combine-as-imports = true
+
+[tool.ruff]
+# rule sources; default: pycodestyle (`E`) and Pyflakes (`F`) codes
+select = [
+#    "ALL",
+    "E",  # pycodestyle
+    "F",  # Pyflakes
+    "W",  # Warning
+    "C90",  # mccabe
+    "I",  # isort
+    "N",  # pep8-naming
+#    "D",  # pydocstyle
+    "UP",  # pyupgrade
+#    "ANN", # flake8-annotations
+    "S",  # flake8-bandit
+    "FBT",  # flake8-boolean-trap
+    "B",  # flake8-bugbear
+    "A",  # flake8-builtins
+    "COM",  # flake8-commas
+    "C4",  # flake8-comprehensions
+    "DTZ",  # flake8-datetimez
+    "ISC",  # flake8-implicit-str-concat
+    "ICN",  # flake8-import-conventions
+    "G",  # flake8-logging-format
+    "INP",  # flake8-no-pep420
+    "PIE",  # flake8-pie
+    "T20",  # flake8-print
+    "PT",  # flake8-pytest-style
+    "Q",  # flake8-quotes
+    "RSE", # flake8-raise
+    "RET",  # flake8-return
+    "SLF",  # flake8-self
+    "SIM",  # flake8-simplify
+    "TID",  # flake8-tidy-imports
+    "TCH",  # flake8-type-checking
+    "ARG",  # flake8-unused-arguments
+    "PTH",  # flake8-use-pathlib
+    "ERA",  # eradicate       (fix removes commented-out code)
+    "PD",  # pandas-vet
+    "PGH",  # pygrep-hooks
+    "PL",  # Pylint
+    "TRY",  # tryceratops
+    "NPY",  # NumPy-specific rules
+    "RUF",  # Ruff-specific rules
+]
+ignore = [
+    "COM812",  # trailing comma missing
+    "G004",  # Logging statement uses f-string
+    "TRY003",  # Avoid specifying long messages outside the exception class
+    "PLR2004",  # magic numbers, i.e. literals
+
+    # to be checked every once and then
+    "ERA001",  # commented-out code
+    "T201",  # print statement
+]
+
+exclude = [
+    "./.git",
+    "./.ruff_cache",
+    "./.idea",
+    "./.mypy_cache",
+]
+line-length = 100
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+target-version = "py311"
+respect-gitignore = true  # default: true
+
+[tool.ruff.pep8-naming]
+# Allow Pydantic's `@validator` decorator to trigger class method treatment (N805)
+classmethod-decorators = ["pydantic.validator", "classmethod"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[[tool.mypy.overrides]]
+module = "colour.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "shapely.geometry.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "shapely.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "folium.*"
+ignore_missing_imports = true
+
+[tool.pylint]
+max-line-length = 100
+disable = [
+    "missing-docstring",  # C0114, C0115, C0116
+    "logging-fstring-interpolation",  # W1203
+]
+extension-pkg-whitelist = "pydantic"
+load-plugins= [
+    "pylint.extensions.bad_builtin",
+    "pylint.extensions.dict_init_mutate",
+    "pylint.extensions.dunder",
+    "pylint.extensions.check_elif",
+    "pylint.extensions.empty_comment",
+    "pylint.extensions.redefined_variable_type",
+    "pylint.extensions.redefined_loop_name",
+    "pylint.extensions.set_membership",
+    "pylint.extensions.typing",
+    "pylint.extensions.while_used",
+    ]

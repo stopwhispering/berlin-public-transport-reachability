@@ -1,0 +1,8 @@
+[destination]
+destinations = ["Alexanderplatz", "Mehringdamm", "Nollendorfplatz"]
+time = "next_workday_noon"  # {'next_workday_noon', 'next_sunday_early_morning'}
+max_transfers = 2  # maximum number of transfers  (seems to  make no difference to the API)
+
+[general]
+max_duration = 40
+circle_radius = 200  # radius in m around the stations
